@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Your Goal</title>
+    </head>
+    <body>
+        <form method="POST" action="{% url 'create_goal' %}" class="create-goal">
+            {% csrf_token %} 
+            <input type="text" name="goal_name" placeholder="Enter your goal" required>
+            <input type="number" name="number_of_task" placeholder="Enter number of tasks" required>
+            <input type="date" name="start_date" placeholder="Start date" required>
+            <input type="date" name="deadline" placeholder="Deadline" required>
+            <button type="submit">Create</button>
+        </form>
+    </body>
+</html>
