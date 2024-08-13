@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Tasks</title>
+    <style>
+        .markdown-content h2 { margin-top: 20px; }
+        .markdown-content strong { font-weight: bold; }
+        .markdown-content pre {
+            white-space: pre-wrap; /* Ensures line breaks are preserved */
+            word-wrap: break-word; /* Ensures long lines break properly */
+        }
+    </style>
+</head>
+<body>
+    <h1>Goal: {{ goal.goal_name }}</h1>
+
+    <h2>AI Generated Tasks</h2>
+    
+    {% if ai_response_html %}
+        <div class="markdown-content">
+            <pre>{{ ai_response_html|safe }}</pre>  
+        </div>
+    {% else %}
+        <p>No AI-generated tasks available.</p>
+    {% endif %}
+    
+    <a href="{% url 'list_goals' %}">Back to Goals</a>
+</body>
+</html>
