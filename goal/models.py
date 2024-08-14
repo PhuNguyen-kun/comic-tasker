@@ -1,19 +1,10 @@
 from django.db import models
-from django.utils import timezone
 
-class Goal(models.Model):
-    goal_name = models.CharField(max_length=255)
-    start_day = models.DateField()
-    finish_day = models.DateField()
-    number_of_task = models.IntegerField()
-    ai_response = models.TextField(null=True, blank=True)
+from app.models import Goal
 
-    def __str__(self):
-        return self.goal_name
-
-class TaskByAI(models.Model):
+class TaskByAI(models.Model): #TaskbyAI table (TaskbyAIテーブル)
     task_name = models.CharField(max_length=255)
-    start_day = models.DateField(default=timezone.now)
+    start_day = models.DateField()
     deadline = models.DateField()
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE)
 

@@ -90,7 +90,7 @@
                     <a href="#about-app" class="navbar__link">About app</a>
                 </li>
                 <li class="navbar__item">
-                    <a href="#view-homework" class="navbar__link"
+                    <a href="{% url 'create_goal' %}" class="navbar__link"
                         >Create tasks</a
                     >
                 </li>
@@ -114,7 +114,7 @@
               </div>
                -->
             <a
-                href="./calendar.html"
+                href="{% url 'calendar' %}"
                 class="btn btn--calendar"
                 style="font-size: 16px"
                 >Calendar</a
