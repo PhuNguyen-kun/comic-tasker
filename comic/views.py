@@ -1,7 +1,7 @@
 import os
 from goal.models import Goal
 from django.conf import settings
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from pathlib import Path
 from PIL import Image
@@ -14,6 +14,8 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 import traceback
 from django.core.files.base import ContentFile
+from django.urls import reverse
+from mycalendar.models import Events
 
 fal_client = fal_client.client.SyncClient(os.environ['FAL_KEY'])
 
@@ -102,3 +104,15 @@ def view_comic(request, comic_id):
     panels = comic.panels.all()
     goal=comic.goal_id
     return render(request, 'view_comic.html', {'comic': comic, 'panels': panels, 'goal':goal})
+
+def mark_task_completed(request, task_id):
+    task = get_object_or_404(Events, id=task_id)
+    task.completed = True
+    task.save()
+
+    # Assuming the task has a related comic
+    comic = task.goal.comic_set.first()
+    if comic:
+        return redirect(reverse('view_comic', args=[comic.id]))
+
+    return redirect('mark_task_completed') 
