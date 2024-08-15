@@ -34,28 +34,22 @@ def split_storyline_into_panels(storyline, panel_count):
     panels_prompt = [panel.strip() for panel in storyline.split('Panel ') if panel.strip()]
     return panels_prompt[:panel_count]
 
-def create_comic(comic_name, goal_id=1): 
+def create_comic(goal_id): 
+    goal = get_object_or_404(Goal, id=goal_id)
     storyline = generate_storyline()
     panels = split_storyline_into_panels(storyline, 10)
     
-    # Create the comic instance in the database
-    comic = Comic.objects.create(title=comic_name, description=storyline, goal_id=goal_id)
+    comic = Comic.objects.create(description=storyline, goal_id=goal)
     
-    # Define the comic folder path
-    comic_folder = os.path.join(settings.MEDIA_ROOT, 'comics', str(comic.id))
-    
-    # Create the comic folder
+    comic_folder = os.path.join(settings.MEDIA_ROOT, 'comics', str(goal.goal_name))
     Path(comic_folder).mkdir(parents=True, exist_ok=True)
     
     storyline_context = ""
     
-    # Generate and save each panel
     for index, panel_prompt in enumerate(panels):
         try:
-            # Combine the storyline context with the current panel prompt
-            combined_prompt = f"Create a Japanese manga style, black and white only, without any dialouge comic panel for the following story: {storyline_context} Now, focus on this scene: {panel_prompt}"
+            combined_prompt = f"Create a Japanese manga style, black and white only, without any dialogue comic panel for the following story: {storyline_context} Now, focus on this scene: {panel_prompt}"
             
-            # Generate the image using fal.ai API
             result = fal_client.run(
                 "fal-ai/fast-sdxl",
                 arguments={
@@ -67,55 +61,39 @@ def create_comic(comic_name, goal_id=1):
                 }
             )
             image_url = result['images'][0]['url']
-            # Extract the image URL from the result
-            '''
-            if isinstance(result, dict) and 'images' in result:
-                image_url = result['images'][0]['url']
-            elif isinstance(result, list) and result:
-                image_url = result[0]['url']
-            else:
-                raise ValueError(f"Unexpected response format from fal.ai: {result}")
-            '''
             print(f"Generated image URL for panel {index + 1}: {image_url}")
-            
-            # Download the image
             response = requests.get(image_url)
             response.raise_for_status()
+           
             
-            # Create a Panel instance
             panel = Panel.objects.create(
                 comic=comic,
                 panel_number=index + 1,
-                #description=panel_prompt
             )
             
-            # Save the image content directly to the ImageField
             image_name = f'panel_{index + 1}.png'
             panel.image.save(image_name, ContentFile(response.content), save=True)
             
-            # Update storyline context for the next iteration
             storyline_context += " " + panel_prompt
             
         except Exception as e:
             print(f"Error generating panel {index + 1}: {str(e)}")
             print(traceback.format_exc())
-            # Optionally, create a placeholder panel or skip this panel
     
     return comic
+
 def generate_comic_view(request):
-    comic_name = request.GET.get('name', 'Untitled Comic')
-    goal_id=request.GET.get('goal_id')
-    comic = create_comic(comic_name, goal_id)
+    goal_id = request.GET.get('goal_id')
     if not goal_id:
         return JsonResponse({'error': 'Goal ID is required.'}, status=400)
+
+    comic = create_comic(goal_id)
     
-#comic = create_comic(comic_name)
     return JsonResponse({
         'comic_id': comic.id,
-        'title': comic.title,
         'description': comic.description,
-        'goal_id':comic.goal_id,
-        'panels': [{'image': panel.image.url, 'description': panel.description, 'unlocked': panel.unlocked} for panel in comic.panels.all()]
+        'goal_id': comic.goal_id.id,
+        'panels': [{'image': panel.image.url, 'unlocked': panel.unlocked} for panel in comic.panels.all()]
     })
 
 
