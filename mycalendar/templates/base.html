@@ -375,7 +375,7 @@
                         }
                     }
                 } {% endcomment %}
-                 function handleEventClick(event) {
+                {% comment %} function handleEventClick(event) {
                     // Hiển thị thông tin chi tiết của sự kiện trong modal
                     $("#eventTitleDetail").text(event.title);
                     $("#eventGoalDetail").text(event.goal_name);
@@ -423,8 +423,65 @@
                             },
                         });
                     });
-                }
+                } {% endcomment %}
 
+                function handleEventClick(event) {
+                    $("#eventTitleDetail").text(event.title);
+                    $("#eventGoalDetail").text(event.goal_name);
+                    $("#eventStartDateDetail").text(moment(event.start).format("YYYY-MM-DD HH:mm:ss"));
+                    $("#eventEndDateDetail").text(moment(event.end).format("YYYY-MM-DD HH:mm:ss"));
+                    $("#eventStatusDetail").text(event.completed ? "Completed" : "Not Completed");
+
+                    const eventId = event.id;
+
+                    if (event.completed) {
+                        $("#completeEvent").prop("disabled", true);
+                        $("#completeEvent").css("background-color", "#cccccc");
+                        $("#completeEvent").css("border-color", "#cccccc");
+                        $("#completeEvent").css("cursor", "not-allowed");
+                    } else {
+                        $("#completeEvent").prop("disabled", false);
+                        $("#completeEvent").css("background-color", "green");
+                        $("#completeEvent").css("border-color", "green");
+                        $("#completeEvent").css("cursor", "pointer");
+                    }
+
+                    $("#viewEventModal").modal("show");
+
+                    // Mark as Completed Button
+                    $("#completeEvent").off("click").on("click", function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/complete_event",
+                            data: { id: eventId },
+                            dataType: "json",
+                            success: function (data) {
+                                calendar.fullCalendar("refetchEvents");
+                                $("#viewEventModal").modal("hide");
+                            },
+                            error: function (data) {
+                                alert("There is a problem!");
+                            },
+                        });
+                    });
+
+                    // Delete Event Button
+                    $("#deleteEvent").off("click").on("click", function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/remove_event",
+                            data: { id: eventId },
+                            dataType: "json",
+                            success: function (data) {
+                                calendar.fullCalendar("refetchEvents");
+                                $("#viewEventModal").modal("hide");
+                            },
+                            error: function (data) {
+                                alert("There is a problem!");
+                            },
+                        });
+                    });
+                }
 
 
             });

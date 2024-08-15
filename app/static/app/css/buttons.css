@@ -96,6 +96,7 @@
 .btn--disabled {
     opacity: 0.5;
     pointer-events: none;
+    font-size: 16px;
 }
 .btn:hover {
     opacity: 0.9;
