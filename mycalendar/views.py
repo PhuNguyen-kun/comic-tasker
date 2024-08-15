@@ -47,6 +47,22 @@ def add_event(request):
 
     return JsonResponse({"success": True})
 
+def all_events(request):
+    all_events = Events.objects.all()
+    out = []
+    for event in all_events:
+        event_color = '#28a745' if event.completed else '#007bff'
+        out.append({
+            'title': event.name,
+            'id': event.id,
+            'start': event.start.strftime("%Y-%m-%d %H:%M:%S"),
+            'end': event.end.strftime("%Y-%m-%d %H:%M:%S"),
+            'color': event_color,
+            'goal_name': event.goal.goal_name if event.goal else "No goal",  # Thêm goal_name
+            'completed': event.completed  # Thêm trạng thái hoàn thành
+        })
+    return JsonResponse(out, safe=False)
+
 
 def update(request):
     start = request.GET.get("start", None)
@@ -75,3 +91,15 @@ def complete_event(request):
     event.save()
     data = {}
     return JsonResponse(data)
+
+def event_details(request):
+    event_id = request.GET.get("id", None)
+    event = Events.objects.get(id=event_id)
+    event_data = {
+        "title": event.name,
+        "start": event.start.strftime("%Y-%m-%d %H:%M:%S"),
+        "end": event.end.strftime("%Y-%m-%d %H:%M:%S"),
+        "goal_name": event.goal.goal_name if event.goal else "No goal",  # Đảm bảo rằng tên Goal được trả về
+        "completed": event.completed,  # Trả về trạng thái hoàn thành
+    }
+    return JsonResponse(event_data)

@@ -150,7 +150,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="margin: 0 auto">
                         <button
                             type="button"
                             class="btn btn--danger"
@@ -164,6 +164,79 @@
                             class="btn btn--next-page"
                         >
                             Save Task
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for viewing event details -->
+        <div
+            class="modal fade"
+            id="viewEventModal"
+            tabindex="-1"
+            aria-labelledby="viewEventModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5
+                            class="modal-title task-title"
+                            id="viewEventModalLabel"
+                        >
+                            Task Details
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div
+                        class="modal-body task-details"
+                        style="display: flex; flex-direction: column; gap: 10px"
+                    >
+                        <p>
+                            <strong style="font-weight: 600">Task name:</strong>
+                            <span id="eventTitleDetail"></span>
+                        </p>
+                        <p>
+                            <strong style="font-weight: 600">Goal:</strong>
+                            <span id="eventGoalDetail"></span>
+                        </p>
+                        <p>
+                            <strong style="font-weight: 600"
+                                >Start Date:</strong
+                            >
+                            <span id="eventStartDateDetail"></span>
+                        </p>
+                        <p>
+                            <strong style="font-weight: 600">End Date:</strong>
+                            <span id="eventEndDateDetail"></span>
+                        </p>
+                        <p>
+                            <strong style="font-weight: 600">Status:</strong>
+                            <span id="eventStatusDetail"></span>
+                        </p>
+                    </div>
+                    <div class="modal-footer" style="margin: 0 auto">
+                        <button
+                            type="button"
+                            class="btn btn--danger"
+                            id="deleteEvent"
+                            style="font-size: 16px"
+                        >
+                            Delete Event
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn--calendar"
+                            id="completeEvent"
+                            style="font-size: 16px; color: white"
+                        >
+                            sCompleted
                         </button>
                     </div>
                 </div>
@@ -209,7 +282,6 @@
                     var start = $("#eventStartDate").val();
                     var end = $("#eventEndDate").val();
 
-                    // Chuyển đổi định dạng ngày giờ trước khi gửi đi
                     start = moment(start).format("YYYY-MM-DDTHH:mm:ss");
                     end = moment(end).format("YYYY-MM-DDTHH:mm:ss");
 
@@ -265,7 +337,7 @@
                     });
                 }
 
-                function handleEventClick(event) {
+                {% comment %} function handleEventClick(event) {
                     var action = confirm(
                         'Mark as Completed? Click "Cancel" to remove.'
                     );
@@ -302,7 +374,59 @@
                             });
                         }
                     }
+                } {% endcomment %}
+                 function handleEventClick(event) {
+                    // Hiển thị thông tin chi tiết của sự kiện trong modal
+                    $("#eventTitleDetail").text(event.title);
+                    $("#eventGoalDetail").text(event.goal_name);
+                    $("#eventStartDateDetail").text(moment(event.start).format("YYYY-MM-DD HH:mm:ss"));
+                    $("#eventEndDateDetail").text(moment(event.end).format("YYYY-MM-DD HH:mm:ss"));
+                    $("#eventStatusDetail").text(event.completed ? "Completed" : "Not Completed");
+
+                    // Lưu ID sự kiện để dùng cho các thao tác tiếp theo
+                    const eventId = event.id;
+
+                    // Hiển thị modal
+                    $("#viewEventModal").modal("show");
+
+                    // Xử lý nút Mark as Completed
+                    $("#completeEvent").off("click").on("click", function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/complete_event",
+                            data: { id: eventId },
+                            dataType: "json",
+                            success: function (data) {
+                                calendar.fullCalendar("refetchEvents");
+                                $("#viewEventModal").modal("hide");
+                            },
+                            error: function (data) {
+                                alert("There is a problem!");
+                            },
+                        });
+                    });
+
+
+                    // Xử lý nút Delete Event
+                    $("#deleteEvent").off("click").on("click", function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/remove_event",
+                            data: { id: eventId },
+                            dataType: "json",
+                            success: function (data) {
+                                calendar.fullCalendar("refetchEvents");
+                                $("#viewEventModal").modal("hide");
+                            },
+                            error: function (data) {
+                                alert("There is a problem!");
+                            },
+                        });
+                    });
                 }
+
+
+
             });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

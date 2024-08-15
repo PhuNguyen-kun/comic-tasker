@@ -27,5 +27,6 @@ urlpatterns = [
     path('update/', views.update, name='update'),
     path('remove_event/', views.remove, name='remove'),
     path('complete_event/', views.complete_event, name='complete_event'),  # Thêm URL cho chức năng "Completed"
+    path('event_details/', views.event_details, name='event_details'),
 
 ]
