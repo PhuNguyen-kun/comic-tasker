@@ -11,7 +11,12 @@
     
     {% for panel in panels %}
         <div>
-            <img src="{{ panel.image.url }}" alt="Panel {{ forloop.counter }}">
+            {% if panel.unlocked %}
+                <img src="{{ panel.image.url }}" alt="Panel {{ forloop.counter }}">
+            {% else %}
+                <p>Panel {{ forloop.counter }} is locked.</p>
+                <!-- Optionally, you could include a placeholder image -->
+            {% endif %}
         </div>
     {% endfor %}
 </body>
