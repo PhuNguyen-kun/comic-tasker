@@ -57,6 +57,7 @@
 .btn--primary {
     color: #171c28;
     background: #ffb700;
+    font-size: 16px;
 }
 
 .btn--calendar {
@@ -67,8 +68,6 @@
     color: #000;
     background: rgb(0, 203, 0);
 }
-
-
 
 .btn--primary:hover {
     color: #171c28;
@@ -86,6 +85,12 @@
     color: #fff;
     background: #ed4337;
 }
+
+.btn--danger:hover {
+    color: #fff;
+    background: #ed4337;
+}
+
 .btn[disabled],
 .btn--disabled {
     opacity: 0.5;
@@ -93,5 +98,30 @@
 }
 .btn:hover {
     opacity: 0.9;
-    box-shadow: 1px 1px 3px 3px #ccc;
+    box-shadow: 1px 1px 3px 3px #cccccc;
+}
+
+.btn-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 20px;
+    padding: 0 20px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.btn--next-page {
+    color: #fff;
+    background: rgb(29, 138, 255);
+    font-size: 18px;
+}
+
+.btn--next-page:hover {
+    color: #fff;
+    background: rgb(29, 138, 255);
 }
