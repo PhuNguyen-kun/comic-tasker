@@ -181,12 +181,21 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
+                        {% comment %}
                         <h5
                             class="modal-title task-title"
                             id="viewEventModalLabel"
                         >
                             Task Details
                         </h5>
+                        {% endcomment %}
+                        <p>
+                            <span
+                                id="eventTitleDetail"
+                                class="task-title"
+                                style="font-weight: 600"
+                            ></span>
+                        </p>
                         <button
                             type="button"
                             class="btn-close"
@@ -198,10 +207,6 @@
                         class="modal-body task-details"
                         style="display: flex; flex-direction: column; gap: 10px"
                     >
-                        <p>
-                            <strong style="font-weight: 600">Task name:</strong>
-                            <span id="eventTitleDetail"></span>
-                        </p>
                         <p>
                             <strong style="font-weight: 600">Goal:</strong>
                             <span id="eventGoalDetail"></span>

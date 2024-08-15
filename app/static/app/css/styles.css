@@ -71,6 +71,14 @@ body {
     box-shadow: 1px 1px 3px 3px #e2e2e2;
 }
 
+.goal-desc:hover {
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 5px 5px #ecd4be;
+}
+
 .goal-detail {
     margin: 10px 0;
 }
@@ -90,4 +98,3 @@ body {
     font-weight: 600;
     font-size: 16px;
 }
-

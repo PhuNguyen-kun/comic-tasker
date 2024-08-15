@@ -72,14 +72,29 @@
                 {% endfor %}
             </ul>
 
-            <button
-                class="btn btn--next-page"
-                style="margin-bottom: 220px; margin-top: 40px"
-            >
-                <a href="{% url 'create_goal' %}"
-                    ><span style="color: #fff">Create a new goal</span></a
+            <div style="display: flex">
+                <button
+                    class="btn btn--next-page"
+                    style="margin-bottom: 220px; margin-top: 15px"
                 >
-            </button>
+                    <a href="{% url 'create_goal' %}"
+                        ><span style="color: #fff"
+                            >Create new Goal & Tasks</span
+                        ></a
+                    >
+                </button>
+
+                <div
+                    class="btn btn--calendar"
+                    style="margin-bottom: 220px; margin-top: 15px"
+                >
+                    <a
+                        href="{% url 'calendar' %}"
+                        style="font-size: 18px; color: white"
+                        >Go to Calendar</a
+                    >
+                </div>
+            </div>
         </div>
 
         <!-- footer -->
