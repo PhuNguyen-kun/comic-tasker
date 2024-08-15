@@ -17,16 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from mycalendar import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app.urls')), 
     path('', include('goal.urls')),
+    path('', include('comic.urls')),
     path('calendar', views.index, name='calendar'),
     path('all_events/', views.all_events, name='all_events'), 
     path('add_event/', views.add_event, name='add_event'), 
     path('update/', views.update, name='update'),
     path('remove_event/', views.remove, name='remove'),
     path('complete_event/', views.complete_event, name='complete_event'),  # Thêm URL cho chức năng "Completed"
-    path('event_details/', views.event_details, name='event_details'),
 
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
