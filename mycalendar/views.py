@@ -1,54 +1,53 @@
 from django.shortcuts import render
 from mycalendar.models import Events
 from django.http import JsonResponse 
+from goal.models import Goal
+from datetime import datetime
 
 # Create your views here.
  
 def index(request):  
     all_events = Events.objects.all()
+    goals = Goal.objects.all()  
     context = {
-        "events":all_events,
+        "events": all_events,
+        "goals": goals  
     }
-    return render(request,'index.html',context)
+    return render(request,'index.html', context)
  
-# def all_events(request):                                                                                                 
-#     all_events = Events.objects.all()                                                                                    
-#     out = []                                                                                                             
-#     for event in all_events:                                                                                             
-#         out.append({                                                                                                     
-#             'title': event.name,                                                                                         
-#             'id': event.id,                                                                                              
-#             'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),                                                         
-#             'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),                                                             
-#         })                                                                                                               
-                                                                                                                      
-#     return JsonResponse(out, safe=False) 
-
 def all_events(request):                                                                                                 
     all_events = Events.objects.all()                                                                                    
     out = []                                                                                                             
-    for event in all_events:                                                                                             
-        event_color = '#28a745' if event.completed else '#007bff'  # Xanh lá cho hoàn thành, xanh dương cho chưa hoàn thành
+    for event in all_events: 
+        event_color = '#28a745' if event.completed else '#007bff'                                                                                            
         out.append({                                                                                                     
             'title': event.name,                                                                                         
             'id': event.id,                                                                                              
             'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),                                                         
-            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),                                                             
-            'color': event_color,  # Thêm thông tin màu sắc
+            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),       
+            'color': event_color,
+                                                      
         })                                                                                                               
-                                                                                                                   
-    return JsonResponse(out, safe=False)
+                                                                                                                      
+    return JsonResponse(out, safe=False) 
 
 
 def add_event(request):
+    title = request.GET.get("title", None)
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
-    title = request.GET.get("title", None)
-    event = Events(name=str(title), start=start, end=end)
+    goal_id = request.GET.get("goal", None)
+
+    start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S')
+    end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S')
+
+    goal = Goal.objects.get(id=goal_id)
+    event = Events(name=title, start=start, end=end, goal=goal)
     event.save()
-    data = {}
-    return JsonResponse(data)
- 
+
+    return JsonResponse({"success": True})
+
+
 def update(request):
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
