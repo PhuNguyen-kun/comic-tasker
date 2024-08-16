@@ -98,3 +98,58 @@ body {
     font-weight: 600;
     font-size: 16px;
 }
+
+/* Comic */
+.comic {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.panel {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.is_locked {
+    width: 300px;
+    height: 300px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.locked_panel {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* .comic {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+.panel {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.is_locked {
+    width: 300px;
+    height: 300px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.locked_panel {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+} */
