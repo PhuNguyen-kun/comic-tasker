@@ -62,11 +62,23 @@
                 <p>No AI-generated tasks available.</p>
                 {% endif %}
             </div>
-            <button class="btn btn--next-page" style="margin-top: 20px">
-                <a href="{% url 'list_goals' %}"
-                    ><span style="color: white">Back to Goals</span></a
+            <div style="display: flex">
+                <button class="btn btn--next-page" style="margin-top: 15px">
+                    <a href="{% url 'list_goals' %}"
+                        ><span style="color: white">Back to Goals</span></a
+                    >
+                </button>
+                <div
+                    class="btn btn--calendar"
+                    style="margin-bottom: 220px; margin-top: 15px"
                 >
-            </button>
+                    <a
+                        href="{% url 'calendar' %}"
+                        style="font-size: 18px; color: white"
+                        >Go to Calendar</a
+                    >
+                </div>
+            </div>
         </div>
 
         <!-- footer -->
