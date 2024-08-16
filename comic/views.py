@@ -99,18 +99,16 @@ def generate_comic_view(request):
     })
 
 
-def view_comic(request, comic_id):
-    comic = get_object_or_404(Comic, id=comic_id)
+def view_comic(request, goal_id):
+    goal = get_object_or_404(Goal, id=goal_id)
+    comic = get_object_or_404(Comic, goal_id=goal)
     panels = comic.panels.all()
-    goal=comic.goal_id
-    return render(request, 'view_comic.html', {'comic': comic, 'panels': panels, 'goal':goal})
+    return render(request, 'view_comic.html', {'comic': comic, 'panels': panels, 'goal': goal})
 
 def mark_task_completed(request, task_id):
     task = get_object_or_404(Events, id=task_id)
     task.completed = True
     task.save()
-
-    # Assuming the task has a related comic
     comic = task.goal.comic_set.first()
     if comic:
         return redirect(reverse('view_comic', args=[comic.id]))
