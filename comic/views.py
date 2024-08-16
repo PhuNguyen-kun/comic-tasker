@@ -32,7 +32,7 @@ def generate_storyline():
     response = model.generate_content(prompt)
     return response.text
 
-def split_storyline_into_panels(storyline, panel_count):
+def split_storyline_into_panels(storyline, panel_count=8):
     panels_prompt = [panel.strip() for panel in storyline.split('Panel ') if panel.strip()]
     return panels_prompt[:panel_count]
 
