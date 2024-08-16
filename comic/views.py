@@ -23,7 +23,7 @@ genai.configure(api_key=os.environ["API_KEY"])
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 def generate_storyline():
-    prompt = ("Generate a storyline for a silent 10-panel comic. Provide each panel's description "
+    prompt = ("Generate a storyline for a silent 8-panel comic. Provide each panel's description "
           "separately with a clear numbering format like 'Panel 1:', 'Panel 2:', and so on. "
           "The storyline should be funny, with a plot twist, and each panel's description "
           "should be concise and directly related to the storyline.")
@@ -32,14 +32,14 @@ def generate_storyline():
     response = model.generate_content(prompt)
     return response.text
 
-def split_storyline_into_panels(storyline, panel_count):
+def split_storyline_into_panels(storyline, panel_count=8):
     panels_prompt = [panel.strip() for panel in storyline.split('Panel ') if panel.strip()]
     return panels_prompt[:panel_count]
 
 def create_comic(goal_id): 
     goal = get_object_or_404(Goal, id=goal_id)
     storyline = generate_storyline()
-    panels = split_storyline_into_panels(storyline, 10)
+    panels = split_storyline_into_panels(storyline, 8)
     
     comic = Comic.objects.create(description=storyline, goal_id=goal)
     
